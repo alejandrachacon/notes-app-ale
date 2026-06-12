@@ -31,6 +31,11 @@ if not SECRET_KEY or SECRET_KEY == 'your-secret-key-here-generate-a-strong-rando
 DEBUG = config('DEBUG', default=not IS_PRODUCTION, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
+
+# Always allow Railway health checks (required for deployment health checks)
+ALLOWED_HOSTS.append('healthcheck.railway.app')
+
+# Add all Railway app domains in production
 if IS_PRODUCTION:
     ALLOWED_HOSTS.append('.railway.app')
 

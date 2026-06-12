@@ -55,6 +55,7 @@ notes-app-ale/              # Root directory
 # Django Settings
 SECRET_KEY=your-secret-key-here-generate-a-long-random-string
 DEBUG=False
+ENVIRONMENT=production  # IMPORTANT: Set this for production security settings
 DJANGO_SETTINGS_MODULE=config.settings
 ALLOWED_HOSTS=your-app-name.up.railway.app
 
@@ -70,6 +71,12 @@ SECURE_SSL_REDIRECT=True
 SESSION_COOKIE_SECURE=True
 CSRF_COOKIE_SECURE=True
 ```
+
+**Important Notes:**
+
+- **ENVIRONMENT Variable**: Set to `production` to enable production security settings. The app will work without this variable (health checks will still pass), but production security features like HTTPS enforcement and secure cookies require it.
+- **Health Checks**: Railway health checks at `healthcheck.railway.app` are automatically allowed in `settings.py` and do not require the ENVIRONMENT variable to be set.
+- **ALLOWED_HOSTS**: The `healthcheck.railway.app` domain is always included. Your Railway app domain (`.railway.app`) is added automatically when `ENVIRONMENT=production`.
 
 **How to Add Variables:**
 1. Go to your service in Railway
