@@ -3,10 +3,18 @@ from .models import Note
 import bleach
 
 
+# Predefined categories with their associated colors
+CATEGORY_COLORS = {
+    'Random Thoughts': '#EF9C66',  # Orange/Peach
+    'School': '#FFE5A3',            # Yellow
+    'Personal': '#B8E0D2',          # Teal/Mint
+}
+
+
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
-        fields = ('id', 'title', 'content', 'created_at', 'updated_at')
+        fields = ('id', 'title','category', 'color', 'content', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')
     
     def validate_title(self, value):
@@ -40,3 +48,27 @@ class NoteSerializer(serializers.ModelSerializer):
             strip=True
         )
         return sanitized
+    
+    def validate_category(self, value):
+        """Validate category is one of the predefined options"""
+        if value and value not in CATEGORY_COLORS:
+            valid_categories = ', '.join(CATEGORY_COLORS.keys())
+            raise serializers.ValidationError(
+                f"Invalid category. Must be one of: {valid_categories}"
+            )
+        return value
+    
+    def validate(self, data):
+        """Validate that color matches the category"""
+        category = data.get('category')
+        color = data.get('color')
+        
+        # If category is provided, auto-assign the correct color
+        if category and category in CATEGORY_COLORS:
+            data['color'] = CATEGORY_COLORS[category]
+        
+        # If color is provided but doesn't match category, override with correct color
+        if category and color and color != CATEGORY_COLORS.get(category):
+            data['color'] = CATEGORY_COLORS[category]
+        
+        return data

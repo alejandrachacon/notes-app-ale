@@ -1,17 +1,35 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework.decorators import action
 from .models import Note
-from .serializers import NoteSerializer
+from .serializers import NoteSerializer, CATEGORY_COLORS
 from .permissions import IsNoteOwner
+import traceback
 
 
 class NoteViewSet(viewsets.ModelViewSet):
     serializer_class = NoteSerializer
-    permission_classes = [IsAuthenticated, IsNoteOwner]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
-        return Note.objects.filter(user=self.request.user)
+        try:
+            if self.request.user.is_authenticated:
+                return Note.objects.filter(user=self.request.user)
+            return Note.objects.none()
+        except Exception as e:
+            print(f"ERROR in get_queryset: {e}")
+            traceback.print_exc()
+            raise
+    
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
+    def categories(self, request):
+        """Return available categories with their colors"""
+        categories = [
+            {'name': name, 'color': color}
+            for name, color in CATEGORY_COLORS.items()
+        ]
+        return Response(categories)
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

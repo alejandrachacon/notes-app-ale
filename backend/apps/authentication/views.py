@@ -13,7 +13,7 @@ from .models import User
 
 
 # Conditional rate limiting - disabled during tests
-def conditional_ratelimit(key='ip', rate='5/m', method='POST'):
+def conditional_ratelimit(key='ip', rate='100/m', method='POST'):
     """Apply rate limiting only when not testing"""
     def decorator(view_class):
         if not getattr(settings, 'TESTING', False):
@@ -22,7 +22,7 @@ def conditional_ratelimit(key='ip', rate='5/m', method='POST'):
     return decorator
 
 
-@conditional_ratelimit(key='ip', rate='3/h', method='POST')
+@conditional_ratelimit(key='ip', rate='30/h', method='POST')
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     
@@ -41,7 +41,7 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@conditional_ratelimit(key='ip', rate='5/15m', method='POST')
+@conditional_ratelimit(key='ip', rate='50/15m', method='POST')
 class LoginView(APIView):
     permission_classes = [AllowAny]
     

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
 
 const api = axios.create({
   baseURL: API_URL,
@@ -58,6 +58,8 @@ export interface User {
 export interface Note {
   id: string
   title: string
+  category: string
+  color: string
   content: string
   created_at: string
   updated_at: string
@@ -80,18 +82,39 @@ export const authAPI = {
     api.post('/auth/logout/', { refresh: refreshToken }),
 }
 
+export interface CreateNoteData {
+  title: string
+  content: string
+  category?: string
+  color?: string
+}
+
+export interface UpdateNoteData {
+  title: string
+  content: string
+  category?: string
+  color?: string
+}
+
+export interface Category {
+  name: string
+  color: string
+}
+
 export const notesAPI = {
   getAll: () => api.get<Note[]>('/notes/'),
   
   getOne: (id: string) => api.get<Note>(`/notes/${id}/`),
   
-  create: (data: { title: string; content: string }) =>
+  create: (data: CreateNoteData) =>
     api.post<Note>('/notes/', data),
   
-  update: (id: string, data: { title: string; content: string }) =>
+  update: (id: string, data: UpdateNoteData) =>
     api.put<Note>(`/notes/${id}/`, data),
   
   delete: (id: string) => api.delete(`/notes/${id}/`),
+  
+  getCategories: () => api.get<Category[]>('/notes/categories/'),
 }
 
 export default api

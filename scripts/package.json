@@ -1,0 +1,12 @@
+{
+  "name": "notes-app-ale-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "extract": "npx tsx figma-extract.ts"
+  },
+  "dependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
