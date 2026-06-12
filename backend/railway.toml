@@ -4,6 +4,7 @@ builder = "nixpacks"
 [deploy]
 startCommand = "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn config.wsgi --bind 0.0.0.0:$PORT"
 healthcheckPath = "/api/health/"
-healthcheckTimeout = 100
+healthcheckTimeout = 300
+healthcheckInitialDelaySeconds = 60
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
