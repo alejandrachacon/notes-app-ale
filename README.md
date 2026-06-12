@@ -2,6 +2,14 @@
 
 A full-stack notes application with Django REST Framework backend and React frontend.
 
+# App Link
+
+https://notes-app-ale.vercel.app/register
+
+# Video
+
+<div style="position: relative; padding-bottom: 64.74820143884892%; height: 0;"><iframe src="https://www.loom.com/embed/1dc629e0da0b40c0a92e2da9e0e02bfd" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
 ## Features
 
 - **User Authentication**: JWT-based authentication with register, login, and token refresh
